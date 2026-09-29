@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shorelake SC — BU14 Self-Evaluation</title>
+<style>
+  :root {
+    --navy: #1B3A6B; --navy-dark: #142c52; --green: #2E7D32; --green-light: #E8F5E9;
+    --red: #B71C1C; --red-light: #FFEBEE; --orange: #E65100; --orange-light: #FFF3E0;
+    --amber: #FF8F00; --yellow-light: #FFF9C4; --blue-light: #E8F0FE;
+    --bg: #F7F8FA; --card: #FFFFFF; --text: #1A1A1A; --text-muted: #666666;
+    --border: #E2E5EA; --chip-off: #EEF0F3; --teal: #00695C; --teal-light: #E0F2F1;
+    box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:#14161A; --card:#1E2126; --text:#EDEDED; --text-muted:#A0A4AA; --border:#33373D;
+      --chip-off:#2A2E34; --blue-light:#22314f; --green-light:#1c3320; --red-light:#3a1a1a;
+      --orange-light:#3a2510; --yellow-light:#3a3410; --teal-light:#12302c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:#14161A; --card:#1E2126; --text:#EDEDED; --text-muted:#A0A4AA; --border:#33373D;
+    --chip-off:#2A2E34; --blue-light:#22314f; --green-light:#1c3320; --red-light:#3a1a1a;
+    --orange-light:#3a2510; --yellow-light:#3a3410; --teal-light:#12302c;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:720px; margin:0 auto; padding:0 16px 60px; }
+
+  header.top { position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:var(--navy); color:white;
+    padding:14px 16px calc(14px + env(safe-area-inset-top,0px)); box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+  header.top .inner { max-width:720px; margin:0 auto; }
+  header.top .brand { font-size:13px; opacity:0.85; letter-spacing:0.02em; text-transform:uppercase; }
+  header.top h1 { margin:2px 0 10px; font-size:19px; font-weight:700; }
+  .tabs { display:flex; gap:6px; }
+  .tab-btn { flex:1; padding:9px 6px; border-radius:8px; border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.08); color:white; font-size:12.5px; font-weight:600; cursor:pointer; text-align:center; }
+  .tab-btn.active { background:white; color:var(--navy); border-color:white; }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin-top:16px; }
+  .intro-card { border-left:4px solid var(--green); }
+  .intro-card h2 { margin:0 0 8px; font-size:16px; color:var(--green); }
+  .intro-card p { margin:0; font-size:14px; line-height:1.5; color:var(--text-muted); }
+
+  .info-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+  .info-field { flex:1 1 140px; }
+  .info-field label { display:block; font-size:12px; color:var(--text-muted); margin-bottom:4px; }
+  .info-field input { width:100%; padding:9px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:14px; }
+
+  .scale-card h2 { margin:0 0 10px; font-size:16px; color:var(--navy); }
+  .scale-legend { display:flex; gap:6px; flex-wrap:wrap; }
+  .scale-chip { flex:1 1 60px; text-align:center; padding:8px 4px; border-radius:8px; font-size:12px; font-weight:700; }
+  .scale-desc { font-size:12.5px; color:var(--text-muted); margin-top:10px; line-height:1.5; }
+
+  .cat-title { font-size:15px; font-weight:700; color:var(--navy); margin:22px 0 10px; padding-bottom:6px; border-bottom:2px solid var(--navy); }
+
+  .skill-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+  .skill-name { font-size:15px; font-weight:600; }
+  .skill-hint { font-size:12.5px; color:var(--text-muted); font-style:italic; margin-top:2px; }
+  .rating-row { display:flex; gap:6px; margin-top:10px; }
+  .rate-btn { flex:1; aspect-ratio:1; border-radius:8px; border:1.5px solid var(--border); background:var(--chip-off);
+    color:var(--text-muted); font-size:15px; font-weight:700; cursor:pointer; transition:transform .08s ease; -webkit-tap-highlight-color:transparent; }
+  .rate-btn:active { transform:scale(0.94); }
+  .rate-btn[data-r="1"].selected { background:var(--red); border-color:var(--red); color:white; }
+  .rate-btn[data-r="2"].selected { background:var(--orange); border-color:var(--orange); color:white; }
+  .rate-btn[data-r="3"].selected { background:var(--amber); border-color:var(--amber); color:white; }
+  .rate-btn[data-r="4"].selected { background:var(--green); border-color:var(--green); color:white; }
+  .rate-btn[data-r="5"].selected { background:var(--navy); border-color:var(--navy); color:white; }
+
+  .note-input { width:100%; margin-top:8px; padding:8px 10px; border-radius:8px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text); font-size:13.5px; font-family:inherit; resize:vertical; min-height:36px; }
+
+  .reflect-card label { display:block; font-size:14px; font-weight:600; margin:14px 0 6px; }
+  .reflect-card label:first-of-type { margin-top:0; }
+  .reflect-card textarea { width:100%; min-height:56px; padding:9px 10px; border-radius:8px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text); font-size:14px; font-family:inherit; resize:vertical; }
+
+  .summary-card { border-left:4px solid var(--navy); }
+  .summary-card h2 { margin:0 0 10px; font-size:16px; color:var(--navy); }
+  .summary-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); font-size:14px; }
+  .summary-row:last-child { border-bottom:none; }
+  .summary-badge { display:inline-block; min-width:30px; text-align:center; padding:2px 8px; border-radius:6px; font-weight:700; color:white; font-size:13px; }
+
+  .action-row { display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
+  .btn { flex:1 1 auto; padding:12px; border-radius:10px; border:none; font-size:14.5px; font-weight:700; cursor:pointer; min-width:120px; }
+  .btn-primary { background:var(--navy); color:white; }
+  .btn-secondary { background:var(--chip-off); color:var(--text); }
+  .btn-send { background:var(--green); color:white; }
+
+  .footer-note { text-align:center; font-size:12px; color:var(--text-muted); margin-top:22px; font-style:italic; }
+  .save-status { text-align:center; font-size:12px; color:var(--green); margin-top:8px; min-height:16px; }
+
+  .send-card { border-left:4px solid var(--green); }
+  .send-card h2 { margin:0 0 8px; font-size:16px; color:var(--green); }
+  .send-card p { font-size:13.5px; color:var(--text-muted); margin:0 0 12px; line-height:1.5; }
+  .preview-box { display:none; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px;
+    font-size:12px; font-family:ui-monospace,Menlo,Consolas,monospace; white-space:pre-wrap; max-height:220px; overflow:auto; margin-top:10px; color:var(--text); }
+
+  /* Coach dashboard */
+  .dash-card h2 { margin:0 0 8px; font-size:16px; color:var(--teal); }
+  .dash-card p { font-size:13.5px; color:var(--text-muted); margin:0 0 10px; line-height:1.5; }
+  .paste-area { width:100%; min-height:110px; padding:10px; border-radius:8px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text); font-size:13px; font-family:ui-monospace,Menlo,Consolas,monospace; resize:vertical; }
+  .msg-banner { border-radius:8px; padding:10px 12px; font-size:13.5px; margin-top:10px; display:none; }
+  .msg-banner.error { background:var(--red-light); color:var(--red); display:block; }
+  .msg-banner.success { background:var(--green-light); color:var(--green); display:block; }
+
+  .roster-section { margin-top:18px; }
+  .roster-title { font-size:15px; font-weight:700; color:var(--teal); margin-bottom:8px; }
+  .roster-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:10px; }
+  table.roster { width:100%; border-collapse:collapse; font-size:12.5px; min-width:560px; }
+  table.roster th { background:var(--teal); color:white; padding:8px 6px; text-align:left; white-space:nowrap; }
+  table.roster td { padding:7px 6px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  table.roster tr:nth-child(even) td { background:var(--teal-light); }
+  .cell-score { font-weight:700; text-align:center; }
+  .row-actions button { font-size:11px; padding:4px 8px; border-radius:6px; border:1px solid var(--border); background:var(--chip-off); color:var(--text); cursor:pointer; margin-right:4px; }
+  .detail-panel { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px; margin-top:6px;
+    font-size:12.5px; white-space:pre-wrap; font-family:ui-monospace,Menlo,Consolas,monospace; display:none; }
+  .empty-note { font-size:13px; color:var(--text-muted); font-style:italic; padding:10px 0; }
+
+  @media print {
+    header.top { position:static; box-shadow:none; }
+    .action-row, .send-card { display:none; }
+    .tab-btn:not(.active) { display:none; }
+    body { background:white; }
+    .card, .skill-card { border:1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="inner">
+    <div class="brand">Shorelake SC · BU14 Rec</div>
+    <h1>Player Self-Evaluation</h1>
+    <div class="tabs">
+      <button class="tab-btn active" id="tabField" onclick="switchTab('field')">⚽ Field</button>
+      <button class="tab-btn" id="tabGK" onclick="switchTab('gk')">🧤 Goalkeeper</button>
+      <button class="tab-btn" id="tabDash" onclick="switchTab('dash')">📋 Coach</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- PLAYER VIEW -->
+  <div id="playerView">
+    <div class="card intro-card">
+      <h2>This is for YOU — be honest</h2>
+      <p>Rate yourself 1–5 on each skill. There are no wrong answers and nobody is grading you on the score. Your answers save automatically on this device. When you're done, send your results to your coach below.</p>
+    </div>
+
+    <div class="card">
+      <div class="info-row">
+        <div class="info-field"><label>My Name</label><input type="text" id="fName" placeholder="Your name"></div>
+        <div class="info-field"><label>Date</label><input type="date" id="fDate"></div>
+        <div class="info-field" style="flex:0 0 80px;"><label>Age</label><input type="number" id="fAge" placeholder="Age" min="8" max="18"></div>
+      </div>
+    </div>
+
+    <div class="card scale-card">
+      <h2>The 5-Point Scale</h2>
+      <div class="scale-legend">
+        <div class="scale-chip" style="background:var(--red-light); color:var(--red);">1<br>Just Starting</div>
+        <div class="scale-chip" style="background:var(--orange-light); color:var(--orange);">2<br>Learning It</div>
+        <div class="scale-chip" style="background:var(--yellow-light); color:var(--amber);">3<br>Getting There</div>
+        <div class="scale-chip" style="background:var(--green-light); color:var(--green);">4<br>Solid</div>
+        <div class="scale-chip" style="background:var(--blue-light); color:var(--navy);">5<br>Got It</div>
+      </div>
+      <div class="scale-desc">1 = rarely works, even in easy situations &nbsp;·&nbsp; 3 = consistent in practice, showing up in games &nbsp;·&nbsp; 5 = reliable under pressure, without thinking about it</div>
+    </div>
+
+    <div id="categoriesRoot"></div>
+
+    <div class="card summary-card" id="summaryCard" style="display:none;">
+      <h2>My Average by Category</h2>
+      <div id="summaryRows"></div>
+    </div>
+
+    <div class="card reflect-card">
+      <h2 style="margin:0 0 4px; font-size:16px; color:var(--navy);">My Reflection</h2>
+      <label>The area I feel most confident in right now:</label>
+      <textarea data-reflect="confident" placeholder="Write your answer..."></textarea>
+      <label>The area I most want to improve:</label>
+      <textarea data-reflect="improve" placeholder="Write your answer..."></textarea>
+      <label>One specific thing I'm working on before the next session:</label>
+      <textarea data-reflect="working_on" placeholder="Write your answer..."></textarea>
+      <label>A moment this season I felt really good about my game:</label>
+      <textarea data-reflect="proud_moment" placeholder="Write your answer..."></textarea>
+      <label>My goal by the end of the season:</label>
+      <textarea data-reflect="goal" placeholder="Write your answer..."></textarea>
+    </div>
+
+    <div class="card send-card">
+      <h2>Send to Coach</h2>
+      <p>Tap Copy Summary below, then open a new email or text to your coach (falcons-sl@outlook.com) and paste it in.</p>
+      <div class="action-row">
+        <button class="btn btn-send" onclick="copySummary()">📋 Copy Summary</button>
+        <button class="btn btn-secondary" onclick="togglePreview()">Preview Summary</button>
+      </div>
+      <div class="preview-box" id="previewBox"></div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn btn-secondary" onclick="clearCurrent(event)">Clear This Form</button>
+      <button class="btn btn-secondary" onclick="try{window.print()}catch(e){}">Print / Save PDF</button>
+    </div>
+    <div class="save-status" id="saveStatus"></div>
+    <div class="footer-note">Shorelake SC · BU14 · Player Self-Evaluation</div>
+  </div>
+
+  <!-- COACH DASHBOARD VIEW -->
+  <div id="dashView" style="display:none;">
+    <div class="card dash-card">
+      <h2>Coach Dashboard</h2>
+      <p>Paste in the full message a player emailed or texted you (including the SHORELAKE-BU14-EVAL markers), then tap "Add to Roster." This builds a running team roster stored on this device.</p>
+      <textarea class="paste-area" id="pasteInput" placeholder="Paste the player's emailed results here..."></textarea>
+      <div class="action-row">
+        <button class="btn btn-primary" onclick="addToRoster()">Add to Roster</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('pasteInput').value=''">Clear Box</button>
+      </div>
+      <div class="msg-banner" id="dashMsg"></div>
+    </div>
+
+    <div class="roster-section">
+      <div class="roster-title">⚽ Field Players</div>
+      <div id="fieldRosterWrap"></div>
+    </div>
+
+    <div class="roster-section">
+      <div class="roster-title">🧤 Goalkeepers</div>
+      <div id="gkRosterWrap"></div>
+    </div>
+
+    <div class="action-row" style="margin-top:20px;">
+      <button class="btn btn-secondary" onclick="exportCSV()">Download CSV</button>
+      <button class="btn btn-secondary" onclick="clearRoster(event)">Clear All Roster Data</button>
+    </div>
+    <div class="footer-note">Roster data is stored only on this device/browser. It is not shared or synced anywhere else.</div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {
+  field: [
+    ['Technical', [
+      ['First touch', 'Do I settle the ball cleanly, with both feet?'],
+      ['Dribbling under pressure', 'Can I keep control when someone is on me?'],
+      ['Passing accuracy', 'Am I hitting my target consistently in games?'],
+      ['Shooting technique', 'Am I hitting the target and not just blasting it?'],
+      ['1v1 defending', 'Do I jockey and wait, or dive in and get beaten?'],
+      ['Weak foot', 'Do I use my weaker foot or always go to my strong one?'],
+    ]],
+    ['Game Smarts', [
+      ['Positioning without the ball', 'Am I in a helpful spot before I receive it?'],
+      ['Decision-making on the ball', 'Do I pick the right option — pass, dribble, or shoot?'],
+      ['Transition (attack to defense)', 'Do I react fast when we lose the ball?'],
+      ['Reading the game', 'Do I scan and anticipate before I get the ball?'],
+    ]],
+    ['Effort & Fitness', [
+      ['Work rate — full game effort', 'Am I still competing hard in the second half?'],
+      ['Intensity in 50-50 situations', 'Do I go for the ball or let defenders win it?'],
+      ['Recovery speed', 'Do I get back into position quickly after losing the ball?'],
+    ]],
+    ['Mental Game', [
+      ['Confidence on the ball', 'Do I want the ball, even in tough moments?'],
+      ['Bouncing back after mistakes', 'Do I shake it off fast, or does it get in my head?'],
+      ['Applying coaching in-game', 'When a coach tells me something, do I try it right away?'],
+    ]],
+    ['Being a Teammate', [
+      ['Communication', 'Am I talking — calling for the ball, organizing in defense?'],
+      ['Unselfishness', 'Do I make the right pass even when I want to shoot?'],
+      ['Effort in training', 'Do I work hard in every practice, not just games?'],
+    ]],
+  ],
+  gk: [
+    ['Shot Stopping', [
+      ['Set position & ready stance', 'Am I balanced and on my toes before every shot?'],
+      ['Low shots — both sides', 'Do I get down quickly and secure ground balls?'],
+      ['High shots & crosses', 'Do I come and claim confidently, or hesitate?'],
+      ['Diving technique', 'Am I getting full extension and landing safely?'],
+    ]],
+    ['Distribution', [
+      ['Short distribution (roll/throw)', 'Am I hitting my target and starting play quickly?'],
+      ['Goal kicks & drop kicks', 'Is my technique consistent and accurate?'],
+      ['Playing out with my feet', 'Am I comfortable with back-passes and building short?'],
+    ]],
+    ['GK Technique', [
+      ['Angle play — cutting down the shooter', 'Do I come off my line to make the goal smaller?'],
+      ['1v1 — spreading and staying big', 'Do I stay on my feet and make myself large?'],
+      ['Ball security — no fumbles', 'Are my hands strong and do I hold shots cleanly?'],
+    ]],
+    ['Game Reading & Communication', [
+      ['Organizing defenders', 'Am I talking to my backline throughout the whole game?'],
+      ['Decision: come or stay?', 'Do I make good choices about when to come off my line?'],
+      ['Positioning between plays', 'Am I in the right spot even when the ball is far away?'],
+    ]],
+    ['Playing Outside the 6-Yard Box', [
+      ['Willingness to come off my line', 'Do I come out to claim balls instead of staying glued to the line?'],
+      ['Sweeper-keeper — reading danger early', 'Do I read through-balls and get there before the attacker?'],
+      ['Courage in 1v1 situations off my line', 'Do I spread and stay big when an attacker runs at me outside the box?'],
+    ]],
+  ]
+};
+
+const REFLECT_LABELS = {
+  confident: 'Confident area',
+  improve: 'Area to improve',
+  working_on: 'Working on',
+  proud_moment: 'Proud moment',
+  goal: 'Season goal',
+};
+
+const COACH_EMAIL = 'falcons-sl@outlook.com';
+
+let currentTab = 'field';
+let saveTimer = null;
+
+function storageKey(tab) { return 'shorelake_bu14_eval_' + tab; }
+function rosterKey() { return 'shorelake_bu14_roster'; }
+
+function safeGet(key) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function safeSet(key, obj) { try { localStorage.setItem(key, JSON.stringify(obj)); return true; } catch (e) { return false; } }
+function safeRemove(key) { try { localStorage.removeItem(key); } catch (e) {} }
+
+function slug(catIdx, skillIdx) { return 'c' + catIdx + '_s' + skillIdx; }
+
+function renderCategories(tab) {
+  const root = document.getElementById('categoriesRoot');
+  root.innerHTML = '';
+  const cats = DATA[tab];
+  cats.forEach((catEntry, ci) => {
+    const [catName, skills] = catEntry;
+    const catTitle = document.createElement('div');
+    catTitle.className = 'cat-title';
+    catTitle.textContent = (ci+1) + '. ' + catName;
+    root.appendChild(catTitle);
+    skills.forEach((skillEntry, si) => {
+      const [name, hint] = skillEntry;
+      const id = slug(ci, si);
+      const card = document.createElement('div');
+      card.className = 'skill-card';
+      card.innerHTML = `
+        <div class="skill-name">${name}</div>
+        <div class="skill-hint">${hint}</div>
+        <div class="rating-row" data-id="${id}">
+          ${[1,2,3,4,5].map(r => `<button class="rate-btn" data-r="${r}" onclick="setRating('${id}', ${r})">${r}</button>`).join('')}
+        </div>
+        <textarea class="note-input" rows="1" placeholder="Why I gave myself this score (optional)" data-note="${id}" oninput="scheduleSave()"></textarea>
+      `;
+      root.appendChild(card);
+    });
+  });
+}
+
+function setRating(id, value) {
+  const row = document.querySelector(`.rating-row[data-id="${id}"]`);
+  if (!row) return;
+  const current = row.dataset.value;
+  const newVal = (current == value) ? '' : String(value);
+  row.dataset.value = newVal;
+  row.querySelectorAll('.rate-btn').forEach(btn => btn.classList.toggle('selected', btn.dataset.r === newVal));
+  scheduleSave();
+  updateSummary();
+}
+
+function getCategoryAverages(tab) {
+  const cats = DATA[tab];
+  const result = [];
+  cats.forEach((catEntry, ci) => {
+    const [catName, skills] = catEntry;
+    let sum = 0, count = 0;
+    skills.forEach((s, si) => {
+      const row = document.querySelector(`.rating-row[data-id="${slug(ci,si)}"]`);
+      const v = row && row.dataset.value ? parseInt(row.dataset.value) : null;
+      if (v) { sum += v; count++; }
+    });
+    result.push({ name: catName, avg: count > 0 ? (sum/count) : null, count });
+  });
+  return result;
+}
+
+function badgeColorFor(avg) {
+  if (avg === null) return '#999';
+  if (avg < 1.5) return 'var(--red)';
+  if (avg < 2.5) return 'var(--orange)';
+  if (avg < 3.5) return 'var(--amber)';
+  if (avg < 4.5) return 'var(--green)';
+  return 'var(--navy)';
+}
+
+function updateSummary() {
+  const cats = getCategoryAverages(currentTab);
+  const rows = document.getElementById('summaryRows');
+  rows.innerHTML = '';
+  let anyScored = false;
+  cats.forEach(c => {
+    if (c.avg !== null) anyScored = true;
+    const div = document.createElement('div');
+    div.className = 'summary-row';
+    const badgeText = c.avg !== null ? c.avg.toFixed(1) : '—';
+    div.innerHTML = `<span>${c.name}</span><span class="summary-badge" style="background:${badgeColorFor(c.avg)}">${badgeText}</span>`;
+    rows.appendChild(div);
+  });
+  document.getElementById('summaryCard').style.display = anyScored ? 'block' : 'none';
+}
+
+function collectState() {
+  const state = { info: {}, ratings: {}, notes: {}, reflect: {} };
+  state.info.name = document.getElementById('fName').value;
+  state.info.date = document.getElementById('fDate').value;
+  state.info.age = document.getElementById('fAge').value;
+  document.querySelectorAll('.rating-row').forEach(row => { if (row.dataset.value) state.ratings[row.dataset.id] = row.dataset.value; });
+  document.querySelectorAll('.note-input').forEach(ta => { if (ta.value) state.notes[ta.dataset.note] = ta.value; });
+  document.querySelectorAll('[data-reflect]').forEach(ta => { if (ta.value) state.reflect[ta.dataset.reflect] = ta.value; });
+  return state;
+}
+
+function applyState(state) {
+  if (!state) return;
+  if (state.info) {
+    document.getElementById('fName').value = state.info.name || '';
+    document.getElementById('fDate').value = state.info.date || '';
+    document.getElementById('fAge').value = state.info.age || '';
+  }
+  if (state.ratings) {
+    Object.keys(state.ratings).forEach(id => {
+      const row = document.querySelector(`.rating-row[data-id="${id}"]`);
+      if (row) {
+        row.dataset.value = state.ratings[id];
+        row.querySelectorAll('.rate-btn').forEach(btn => btn.classList.toggle('selected', btn.dataset.r === state.ratings[id]));
+      }
+    });
+  }
+  if (state.notes) {
+    Object.keys(state.notes).forEach(id => {
+      const ta = document.querySelector(`.note-input[data-note="${id}"]`);
+      if (ta) ta.value = state.notes[id];
+    });
+  }
+  if (state.reflect) {
+    Object.keys(state.reflect).forEach(key => {
+      const ta = document.querySelector(`[data-reflect="${key}"]`);
+      if (ta) ta.value = state.reflect[key];
+    });
+  }
+  updateSummary();
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    const ok = safeSet(storageKey(currentTab), collectState());
+    const status = document.getElementById('saveStatus');
+    status.textContent = ok ? 'Saved on this device ✓' : '';
+    if (ok) setTimeout(() => { status.textContent = ''; }, 1500);
+  }, 400);
+}
+
+function attachInputListeners() {
+  ['fName','fDate','fAge'].forEach(id => document.getElementById(id).addEventListener('input', scheduleSave));
+  document.querySelectorAll('[data-reflect]').forEach(ta => ta.addEventListener('input', scheduleSave));
+}
+
+function switchTab(tab) {
+  if (tab === 'dash') {
+    document.getElementById('playerView').style.display = 'none';
+    document.getElementById('dashView').style.display = 'block';
+    document.getElementById('tabField').classList.remove('active');
+    document.getElementById('tabGK').classList.remove('active');
+    document.getElementById('tabDash').classList.add('active');
+    renderRoster();
+    return;
+  }
+  currentTab = tab;
+  document.getElementById('playerView').style.display = 'block';
+  document.getElementById('dashView').style.display = 'none';
+  document.getElementById('tabField').classList.toggle('active', tab === 'field');
+  document.getElementById('tabGK').classList.toggle('active', tab === 'gk');
+  document.getElementById('tabDash').classList.remove('active');
+  renderCategories(tab);
+  attachInputListeners();
+  applyState(safeGet(storageKey(tab)));
+  document.getElementById('previewBox').style.display = 'none';
+}
+
+function clearCurrent(evt) {
+  const btn = evt.currentTarget;
+  if (btn.dataset.armed !== '1') {
+    btn.dataset.armed = '1';
+    const original = btn.textContent;
+    btn.dataset.originalText = original;
+    btn.textContent = 'Tap again to confirm';
+    btn.style.background = 'var(--red)';
+    btn.style.color = 'white';
+    btn._armTimeout = setTimeout(() => resetArmedButton(btn), 3000);
+    return;
+  }
+  clearTimeout(btn._armTimeout);
+  resetArmedButton(btn);
+  safeRemove(storageKey(currentTab));
+  document.getElementById('fName').value = '';
+  document.getElementById('fDate').value = '';
+  document.getElementById('fAge').value = '';
+  document.querySelectorAll('[data-reflect]').forEach(ta => ta.value = '');
+  renderCategories(currentTab);
+  attachInputListeners();
+  updateSummary();
+}
+
+function resetArmedButton(btn) {
+  btn.dataset.armed = '0';
+  btn.textContent = btn.dataset.originalText || btn.textContent;
+  btn.style.background = '';
+  btn.style.color = '';
+}
+
+// ---------- Build summary text (shared by email + copy + preview) ----------
+function buildSummaryText() {
+  const state = collectState();
+  const name = state.info.name || '(no name entered)';
+  const date = state.info.date || '(no date)';
+  const age = state.info.age || '(no age)';
+  const typeLabel = currentTab === 'field' ? 'Field' : 'Goalkeeper';
+  const cats = getCategoryAverages(currentTab);
+  const overallVals = cats.filter(c => c.avg !== null).map(c => c.avg);
+  const overall = overallVals.length ? (overallVals.reduce((a,b)=>a+b,0)/overallVals.length) : null;
+
+  let lines = [];
+  lines.push('===SHORELAKE-BU14-EVAL===');
+  lines.push('Type: ' + typeLabel);
+  lines.push('Name: ' + name);
+  lines.push('Date: ' + date);
+  lines.push('Age: ' + age);
+  cats.forEach(c => {
+    lines.push(c.name + ': ' + (c.avg !== null ? c.avg.toFixed(1) : 'N/A'));
+  });
+  lines.push('Overall: ' + (overall !== null ? overall.toFixed(1) : 'N/A'));
+  lines.push('-----');
+  lines.push('DETAILS:');
+  DATA[currentTab].forEach((catEntry, ci) => {
+    const [catName, skills] = catEntry;
+    lines.push('[' + catName + ']');
+    skills.forEach((s, si) => {
+      const id = slug(ci, si);
+      const rating = state.ratings[id] || '-';
+      const note = state.notes[id] ? ' — ' + state.notes[id] : '';
+      lines.push('  ' + s[0] + ': ' + rating + note);
+    });
+  });
+  lines.push('REFLECTION:');
+  Object.keys(REFLECT_LABELS).forEach(key => {
+    if (state.reflect[key]) lines.push('  ' + REFLECT_LABELS[key] + ': ' + state.reflect[key]);
+  });
+  lines.push('===END-SHORELAKE-BU14-EVAL===');
+  return lines.join('\n');
+}
+
+function togglePreview() {
+  const box = document.getElementById('previewBox');
+  if (box.style.display === 'block') { box.style.display = 'none'; return; }
+  box.textContent = buildSummaryText();
+  box.style.display = 'block';
+}
+
+function buildSummaryTextForShare() {
+  return buildSummaryText();
+}
+
+function copySummary() {
+  const text = buildSummaryText();
+  const status = document.getElementById('saveStatus');
+  function done(ok) {
+    status.textContent = ok ? 'Copied! Paste into a text or email ✓' : 'Could not copy — use Preview and copy manually';
+    setTimeout(() => { status.textContent = ''; }, 2500);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => done(true)).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+function fallbackCopy(text, cb) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    cb(ok);
+  } catch (e) { cb(false); }
+}
+
+// ---------- Coach dashboard: parsing + roster ----------
+function parseEvalText(raw) {
+  const startIdx = raw.indexOf('===SHORELAKE-BU14-EVAL===');
+  const endIdx = raw.indexOf('===END-SHORELAKE-BU14-EVAL===');
+  if (startIdx === -1 || endIdx === -1) return null;
+  const block = raw.substring(startIdx, endIdx + '===END-SHORELAKE-BU14-EVAL==='.length);
+  const lines = block.split('\n').map(l => l.trim());
+  const entry = { type:null, name:null, date:null, age:null, categories:{}, overall:null, raw: block };
+  let inDetails = false;
+  lines.forEach(line => {
+    if (line.startsWith('Type:')) entry.type = line.replace('Type:','').trim();
+    else if (line.startsWith('Name:')) entry.name = line.replace('Name:','').trim();
+    else if (line.startsWith('Date:')) entry.date = line.replace('Date:','').trim();
+    else if (line.startsWith('Age:')) entry.age = line.replace('Age:','').trim();
+    else if (line.startsWith('Overall:')) entry.overall = line.replace('Overall:','').trim();
+    else if (line === 'DETAILS:') inDetails = true;
+    else if (!inDetails && line.includes(':') && !line.startsWith('===') && !line.startsWith('-----')) {
+      const idx = line.indexOf(':');
+      const key = line.substring(0, idx).trim();
+      const val = line.substring(idx+1).trim();
+      if (key && val && key !== 'Type' && key !== 'Name' && key !== 'Date' && key !== 'Age' && key !== 'Overall') {
+        entry.categories[key] = val;
+      }
+    }
+  });
+  if (!entry.name || !entry.type) return null;
+  return entry;
+}
+
+function slugName(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+
+function addToRoster() {
+  const raw = document.getElementById('pasteInput').value;
+  const msg = document.getElementById('dashMsg');
+  const parsed = parseEvalText(raw);
+  if (!parsed) {
+    msg.className = 'msg-banner error';
+    msg.textContent = "Couldn't find the Shorelake eval format in that text. Make sure you pasted the whole message, including the ===SHORELAKE-BU14-EVAL=== markers.";
+    return;
+  }
+  const roster = safeGet(rosterKey()) || {};
+  const typeKey = parsed.type.toLowerCase().includes('goal') ? 'gk' : 'field';
+  const id = typeKey + '__' + slugName(parsed.name);
+  roster[id] = { ...parsed, typeKey, savedAt: new Date().toISOString() };
+  safeSet(rosterKey(), roster);
+  document.getElementById('pasteInput').value = '';
+  msg.className = 'msg-banner success';
+  msg.textContent = '✓ Added ' + parsed.name + ' (' + parsed.type + ') to the roster.';
+  renderRoster();
+}
+
+function renderRoster() {
+  const roster = safeGet(rosterKey()) || {};
+  renderRosterTable('field', document.getElementById('fieldRosterWrap'), roster);
+  renderRosterTable('gk', document.getElementById('gkRosterWrap'), roster);
+}
+
+function renderRosterTable(typeKey, container, roster) {
+  const entries = Object.entries(roster).filter(([id, e]) => e.typeKey === typeKey);
+  if (entries.length === 0) {
+    container.innerHTML = '<div class="empty-note">No submissions yet.</div>';
+    return;
+  }
+  // Determine category column set from the first entry of this type (all entries of same type share categories)
+  const catNames = Object.keys(entries[0][1].categories);
+  let html = '<div class="roster-table-wrap"><table class="roster"><thead><tr>';
+  html += '<th>Name</th><th>Date</th><th>Age</th>';
+  catNames.forEach(c => html += `<th>${c}</th>`);
+  html += '<th>Overall</th><th></th></tr></thead><tbody>';
+  entries.sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''));
+  entries.forEach(([id, e]) => {
+    html += '<tr>';
+    html += `<td>${e.name||''}</td><td>${e.date||''}</td><td>${e.age||''}</td>`;
+    catNames.forEach(c => {
+      const val = e.categories[c];
+      const num = val && val !== 'N/A' ? parseFloat(val) : null;
+      const color = num !== null ? badgeColorFor(num) : '#999';
+      html += `<td class="cell-score" style="color:${color}">${val || '—'}</td>`;
+    });
+    const oNum = e.overall && e.overall !== 'N/A' ? parseFloat(e.overall) : null;
+    html += `<td class="cell-score" style="color:${oNum!==null?badgeColorFor(oNum):'#999'}">${e.overall||'—'}</td>`;
+    html += `<td class="row-actions"><button onclick="toggleDetail('${id}')">View</button><button onclick="deleteEntry(event, '${id}')">Delete</button></td>`;
+    html += '</tr>';
+    html += `<tr id="detailRow_${id}" style="display:none;"><td colspan="${3+catNames.length+2}"><div class="detail-panel" id="detailPanel_${id}"></div></td></tr>`;
+  });
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+}
+
+function toggleDetail(id) {
+  const row = document.getElementById('detailRow_' + id);
+  const panel = document.getElementById('detailPanel_' + id);
+  const roster = safeGet(rosterKey()) || {};
+  const entry = roster[id];
+  if (!entry) return;
+  const isHidden = row.style.display === 'none';
+  if (isHidden) {
+    panel.textContent = entry.raw;
+    row.style.display = 'table-row';
+  } else {
+    row.style.display = 'none';
+  }
+}
+
+function deleteEntry(evt, id) {
+  const btn = evt.currentTarget;
+  if (btn.dataset.armed !== '1') {
+    btn.dataset.armed = '1';
+    btn.dataset.originalText = btn.textContent;
+    btn.textContent = 'Confirm?';
+    btn.style.background = 'var(--red)';
+    btn.style.color = 'white';
+    btn._armTimeout = setTimeout(() => resetArmedButton(btn), 3000);
+    return;
+  }
+  clearTimeout(btn._armTimeout);
+  const roster = safeGet(rosterKey()) || {};
+  delete roster[id];
+  safeSet(rosterKey(), roster);
+  renderRoster();
+}
+
+function clearRoster(evt) {
+  const btn = evt.currentTarget;
+  if (btn.dataset.armed !== '1') {
+    btn.dataset.armed = '1';
+    btn.dataset.originalText = btn.textContent;
+    btn.textContent = 'Tap again to erase everything';
+    btn.style.background = 'var(--red)';
+    btn.style.color = 'white';
+    btn._armTimeout = setTimeout(() => resetArmedButton(btn), 3000);
+    return;
+  }
+  clearTimeout(btn._armTimeout);
+  resetArmedButton(btn);
+  safeRemove(rosterKey());
+  renderRoster();
+}
+
+async function exportCSV() {
+  const roster = safeGet(rosterKey()) || {};
+  const entries = Object.values(roster);
+  const msg = document.getElementById('dashMsg');
+  if (entries.length === 0) {
+    msg.className = 'msg-banner error';
+    msg.textContent = 'No roster data to export yet.';
+    return;
+  }
+  const allCats = new Set();
+  entries.forEach(e => Object.keys(e.categories).forEach(c => allCats.add(c)));
+  const catList = Array.from(allCats);
+  let csv = 'Type,Name,Date,Age,' + catList.join(',') + ',Overall\n';
+  entries.forEach(e => {
+    const row = [e.type, e.name, e.date, e.age, ...catList.map(c => e.categories[c]||''), e.overall||''];
+    csv += row.map(v => '"' + String(v||'').replace(/"/g,'""') + '"').join(',') + '\n';
+  });
+  try {
+    if (typeof claude !== 'undefined' && claude && claude.use) {
+      const downloads = await claude.use('downloads');
+      if (downloads) {
+        await downloads.save({ filename: 'shorelake_bu14_roster.csv', data: csv });
+        msg.className = 'msg-banner success';
+        msg.textContent = 'CSV download requested — check your device\'s download prompt.';
+        return;
+      }
+    }
+  } catch (e) {}
+  // fallback for anywhere outside claude.ai (e.g. hosted on Google Drive): try a real file download first
+  try {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'shorelake_bu14_roster.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    msg.className = 'msg-banner success';
+    msg.textContent = 'CSV download started.';
+    return;
+  } catch (e) {}
+  fallbackCopy(csv, (ok) => {
+    msg.className = ok ? 'msg-banner success' : 'msg-banner error';
+    msg.textContent = ok
+      ? 'Download unavailable here — CSV copied to clipboard instead. Paste it into a spreadsheet.'
+      : 'Could not export automatically. Please screenshot the table instead.';
+  });
+}
+
+// init
+renderCategories(currentTab);
+attachInputListeners();
+applyState(safeGet(storageKey(currentTab)));
+</script>
+
+</body>
+</html>
