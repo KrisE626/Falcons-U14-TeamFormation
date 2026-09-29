@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shorelake U14 Positions: 3-5-2 and 5-3-2</title>
+<meta name="description" content="Interactive position guide for U14 recreational boys: a 3-5-2 / 5-3-2 with a No. 9 and No. 10 up top.">
+<meta name="theme-color" content="#000000">
+<style>
+:root{
+  --bg:#f3f5f1; --card:#ffffff; --ink:#141814; --muted:#59645b; --line:#dde3da;
+  --seg:#e4e9e1; --kelly:#1fa84a; --kelly-ink:#0d6b2b; --soft:#eaf6ee; --warn:#b3261e;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d100d; --card:#171b17; --ink:#eef2ee; --muted:#9ba69c; --line:#2a312a;
+    --seg:#232923; --kelly:#2fc25e; --kelly-ink:#7be39d; --soft:#15251a; --warn:#ff8a80;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d100d; --card:#171b17; --ink:#eef2ee; --muted:#9ba69c; --line:#2a312a;
+  --seg:#232923; --kelly:#2fc25e; --kelly-ink:#7be39d; --soft:#15251a; --warn:#ff8a80;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.45;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px 40px}
+header{background:#000;color:#fff;border-bottom:4px solid var(--kelly)}
+header .in{max-width:560px;margin:0 auto;padding:16px 14px 14px}
+header .club{font-size:13px;opacity:.75;margin:0 0 2px}
+h1{margin:0;font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;font-weight:900;
+  font-size:26px;line-height:1.05;letter-spacing:-.02em}
+header p.sub{margin:6px 0 0;font-size:14px;opacity:.85}
+.seg{display:flex;background:var(--seg);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:700;
+  font-size:14px;padding:10px 6px;border-radius:9px;cursor:pointer;line-height:1.2}
+.seg button.on{background:var(--kelly);color:#fff}
+.seg button small{display:block;font-weight:500;font-size:11.5px;opacity:.85;margin-top:2px}
+.modes{margin-top:14px}
+.shapes{margin-top:10px}
+.banner{margin:10px 0 0;font-size:14px;color:var(--muted);min-height:42px}
+.banner b{color:var(--ink)}
+.pitchbox{margin-top:10px;border-radius:16px;overflow:hidden;background:#1e7a35;border:1px solid var(--line)}
+.pitchbox svg{display:block;width:100%;height:auto;touch-action:manipulation}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px 0;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:13px;height:13px;border-radius:50%;display:inline-block;border:2px solid #000}
+.legend .l-gk{background:#ffd23f}.legend .l-def{background:#000;border-color:#888}
+.legend .l-mid{background:#fff;border-color:#222}.legend .l-att{background:#ff7a3d}
+.note-lr{font-size:12px;color:var(--muted);margin:4px 2px 0}
+
+/* pitch dots */
+.dot{cursor:pointer;transition:transform .95s cubic-bezier(.4,0,.2,1);outline:none}
+.dot .inner{transition:transform .25s ease}
+.dot .ring{fill:none;stroke:transparent;stroke-width:3}
+.dot .body{stroke:#000;stroke-width:2}
+.dot text{font:800 10px system-ui,Arial,sans-serif;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.dot.gk .body{fill:#ffd23f}.dot.gk text{fill:#111}
+.dot.def .body{fill:#000;stroke:#fff}.dot.def text{fill:#fff}
+.dot.mid .body{fill:#fff}.dot.mid text{fill:#111}
+.dot.att .body{fill:#ff7a3d}.dot.att text{fill:#111}
+.dot.sel .inner{transform:scale(1.14)}
+.dot.sel .ring{stroke:#fff;stroke-dasharray:5 3}
+.dot.partner .ring{stroke:#ffd23f}
+.dot.right .ring{stroke:#66ff92;stroke-width:4}
+.dot.wrong .ring{stroke:#ff6b6b;stroke-width:4}
+.dot.wrong .inner{animation:shake .35s}
+.dot:focus-visible .ring{stroke:#fff;stroke-width:4}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media (prefers-reduced-motion: reduce){
+  .dot{transition:none}.dot.wrong .inner{animation:none}
+}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
+.card h2{margin:0;font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;font-size:21px;line-height:1.1;letter-spacing:-.015em}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px}
+.tag{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--seg);color:var(--ink)}
+.tag.shape{background:var(--soft);color:var(--kelly-ink)}
+.one{font-size:16.5px;font-weight:700;margin:0 0 10px}
+.shapebox{background:var(--soft);border-left:4px solid var(--kelly);border-radius:8px;padding:10px 12px;font-size:14.5px;margin:0 0 12px}
+.shapebox b{color:var(--kelly-ink)}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:700;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:20px;font-weight:600;color:var(--kelly-ink);line-height:1}
+details[open]>summary::after{content:"\2212"}
+details ul{margin:8px 0 2px;padding-left:20px;font-size:14.5px}
+details li{margin:5px 0}
+.sect{margin:14px 0 6px;font-weight:800;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1.5px solid var(--kelly);background:transparent;color:var(--ink);font:inherit;font-size:13.5px;
+  font-weight:600;padding:6px 11px;border-radius:99px;cursor:pointer}
+.chip.cue{border-style:dashed;cursor:default}
+.qa{border:1px solid var(--line);border-radius:10px;padding:0 12px;margin:7px 0;background:transparent}
+.qa summary{padding:10px 0;font-weight:600;font-size:14.5px}
+.qa[open]{background:var(--soft)}
+.qa p{margin:0 0 10px;font-size:14.5px}
+.qa p b{color:var(--kelly-ink)}
+.qa details,.qa{border-top:1px solid var(--line)}
+.watch{font-size:14px;color:var(--muted);margin:10px 0 0}
+.nav{display:flex;gap:8px;margin-top:16px;align-items:center}
+.nav button,.btn{font:inherit;font-weight:700;font-size:14.5px;border-radius:10px;padding:11px 14px;cursor:pointer;border:1.5px solid var(--kelly);
+  background:transparent;color:var(--ink)}
+.nav .count{flex:1;text-align:center;font-size:13px;color:var(--muted)}
+.btn.primary{background:var(--kelly);color:#fff;border-color:var(--kelly)}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--kelly);outline-offset:2px}
+
+/* quiz */
+.qprog{font-size:13px;color:var(--muted);margin:0 0 6px}
+.qtext{font-size:18px;font-weight:700;margin:0 0 6px}
+.qhint{font-size:14px;color:var(--muted);margin:0 0 10px}
+.fb{border-radius:10px;padding:10px 12px;font-size:14.5px;margin:10px 0 0}
+.fb.good{background:var(--soft);border-left:4px solid var(--kelly)}
+.fb.bad{background:rgba(179,38,30,.1);border-left:4px solid var(--warn)}
+.fb.info{background:var(--seg)}
+.final{text-align:center;padding:8px 0}
+.final .big{font-family:"Arial Black",Arial,sans-serif;font-size:44px;line-height:1;margin:6px 0}
+
+/* big ideas */
+.ideas{margin-top:22px}
+.ideas h3{font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;font-size:19px;margin:0 0 4px;letter-spacing:-.01em}
+.idea{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:8px}
+.idea b{display:block;margin-bottom:2px;font-size:15px}
+.idea p{margin:0;font-size:14.5px;color:var(--muted)}
+.foot{margin-top:18px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="in">
+  <p class="club">Shorelake Soccer Club &middot; U14 boys recreational</p>
+  <h1>Who does what: 3-5-2 and 5-3-2</h1>
+  <p class="sub">Tap any player on the field, read it together, then ask the questions. Same eleven players, two shapes, with a No. 9 and No. 10 up top.</p>
+</div></header>
+
+<div class="wrap">
+  <div class="seg modes" id="modes" role="group" aria-label="Mode">
+    <button data-mode="learn" class="on">Learn the positions</button>
+    <button data-mode="quiz">Quiz: who am I?</button>
+  </div>
+
+  <div class="seg shapes" id="shapes" role="group" aria-label="Shape">
+    <button data-shape="352" class="on">3-5-2<small>we have the ball</small></button>
+    <button data-shape="532">5-3-2<small>they have the ball</small></button>
+  </div>
+  <p class="banner" id="banner"></p>
+
+  <div class="pitchbox">
+    <svg viewBox="0 0 340 460" role="img" aria-label="Soccer field with eleven tappable players">
+      <rect width="340" height="460" fill="#1e7a35"/>
+      <g fill="#238a3c">
+        <rect y="10" width="340" height="43"/><rect y="96" width="340" height="43"/>
+        <rect y="182" width="340" height="43"/><rect y="268" width="340" height="43"/>
+        <rect y="354" width="340" height="43"/>
+      </g>
+      <g fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2">
+        <rect x="10" y="10" width="320" height="440"/>
+        <line x1="10" y1="230" x2="330" y2="230"/>
+        <circle cx="170" cy="230" r="38"/>
+        <rect x="82" y="386" width="176" height="64"/><rect x="125" y="426" width="90" height="24"/>
+        <rect x="82" y="10" width="176" height="64"/><rect x="125" y="10" width="90" height="24"/>
+        <path d="M128 386 A38 38 0 0 1 212 386"/><path d="M128 74 A38 38 0 0 0 212 74"/>
+      </g>
+      <g fill="rgba(255,255,255,.85)"><circle cx="170" cy="230" r="3"/><circle cx="170" cy="408" r="2.5"/><circle cx="170" cy="52" r="2.5"/></g>
+      <text x="170" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(255,255,255,.65)" font-family="system-ui,Arial">their goal</text>
+      <text x="170" y="443" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(255,255,255,.65)" font-family="system-ui,Arial">our goal</text>
+      <g id="dots"></g>
+    </svg>
+  </div>
+  <div class="legend" aria-hidden="true">
+    <span><i class="l-gk"></i>Goalkeeper</span><span><i class="l-def"></i>Defenders</span>
+    <span><i class="l-mid"></i>Midfielders</span><span><i class="l-att"></i>The 9 and the 10</span>
+  </div>
+  <p class="note-lr">Left and right are from our team's point of view, facing the other goal.</p>
+
+  <div class="card" id="card"></div>
+
+  <section class="ideas">
+    <h3>Ideas for the whole team</h3>
+    <div class="idea"><b>One team, two shapes</b><p>With the ball we spread out as a 3-5-2: the wing-backs push up and wide. When we lose it, they sprint back and we become a 5-3-2. Use the toggle above to watch it happen.</p></div>
+    <div class="idea"><b>The 9 and 10 work as a pair</b><p>The 9 is the target: high, strong on the ball, always looking to finish. The 10 is the link: dropping into gaps, turning, and setting up the 9. They should be close enough to help each other, but never in the same spot.</p></div>
+    <div class="idea"><b>Stay connected</b><p>Every player should be a good pass away from a teammate. Gaps between the defenders, midfielders and strikers are where the other team scores.</p></div>
+    <div class="idea"><b>The five seconds after the ball changes hands</b><p>Lose it: get between the ball and our goal. Win it: look forward fast, before the other team is set.</p></div>
+    <div class="idea"><b>Talk</b><p>Names, not just noise. Try “Man on!”, “Time!”, “Turn!”, “Switch!” and “Keeper!”.</p></div>
+    <p class="foot">Recreational reminder: kids will play different spots as the season goes on. The goal is understanding every job, not locking anyone into one. Wing-back is the most tiring position, so rotate it.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var ORDER=["GK","LCB","CB","RCB","LWB","RWB","DM","LCM","RCM","N9","N10"];
+var NAMES={GK:"Goalkeeper",LCB:"Left center back",CB:"Center back",RCB:"Right center back",
+  LWB:"Left wing-back",RWB:"Right wing-back",DM:"Holding midfielder",LCM:"Left central midfielder",
+  RCM:"Right central midfielder",N9:"Number 9 (target striker)",N10:"Number 10 (second striker)"};
+var LINE={GK:"gk",LCB:"def",CB:"def",RCB:"def",LWB:"def",RWB:"def",DM:"mid",LCM:"mid",RCM:"mid",N9:"att",N10:"att"};
+var LABEL={N9:"9",N10:"10"};
+var LINELABEL={gk:"Goalkeeper",def:"Defense",mid:"Midfield",att:"Attack"};
+/* [3-5-2 position, 5-3-2 position] in a 340 x 460 field, our goal at the bottom */
+var COORD={
+  GK:[[170,425],[170,425]],
+  LCB:[[85,345],[98,352]], CB:[[170,360],[170,360]], RCB:[[255,345],[242,352]],
+  LWB:[[40,215],[40,335]], RWB:[[300,215],[300,335]],
+  DM:[[170,290],[170,290]],
+  LCM:[[105,225],[105,255]], RCM:[[235,225],[235,255]],
+  N9:[[160,100],[160,165]], N10:[[190,160],[185,215]]
+};
+
+function sideCB(side,other){
+  var s=side==="left"?"left":"right";
+  return {
+    one:"The "+s+" defender of the three: covers the wide channel, steps out to challenge, and can step forward with the ball.",
+    n352:"The "+s+" wing-back is high up the field, so you protect the space behind them. If they get beaten, you slide out to help.",
+    n532:"The wing-back drops in beside you to make a line of five. Now you hold your channel, and you can step out to a dribbler as long as the middle center back is covering you.",
+    withBall:["Take the ball from the keeper or the middle center back, look up, and pass to the wing-back or a midfielder.","Step forward into midfield with the ball when there is space. That is how a back three makes an extra player.","Don't drift too wide. Stay close enough to the middle center back to be an easy pass."],
+    without:["Defend the "+s+" channel: stay between the attacker and our goal.","Step out to challenge a dribbler only when the middle center back is covering behind you.","Watch the far side too. If the ball switches, slide across quickly."],
+    cues:["Stay on your feet","Slide with the ball","If you step, someone covers"],
+    ask:[["Your wing-back is way up the field and the other team has the ball on your side. Who covers the sideline?","You do. Slide out to the wide space, and the middle center back slides over to cover you."],
+         ["When is it safe to step out and tackle?","When a teammate is behind you covering. If nobody is, hold your position and slow the attacker down."]],
+    watch:"When the wing-back runs forward, does this defender slide wider to cover the gap?",
+    partners:[other,"CB",side==="left"?"LWB":"RWB",side==="left"?"LCM":"RCM"]
+  };
+}
+function wingBack(side){
+  var s=side==="left"?"left":"right";
+  return {
+    one:"The engine of the team: covers the whole "+s+" sideline, up and down, all game.",
+    n352:"With the ball, you are high and wide like a winger. The whole team counts on you to stretch the field.",
+    n532:"Without the ball, you drop back into the line and become an outside defender, a fullback.",
+    withBall:["Stay wide, chalk on your boots, so the other team's defenders have to spread out.","Get the ball, look up, then cross it, pass inside to a midfielder, or dribble at the defender.","Overlap: when the midfielder near you has the ball, sprint past on the outside for a pass down the line."],
+    without:["The moment we lose it, sprint back toward our goal. Get back into our half first, then find your player.","Push attackers toward the sideline, away from the middle where they can hurt us.","When the ball is on the far side, tuck in toward the middle so the team stays tight."],
+    cues:["Wide with the ball, tight without it","Recovery runs are half the job","Sprint up, sprint back"],
+    ask:[["We just lost the ball and you are near the halfway line. What is your first move?","Sprint back toward our goal, find the nearest attacker or open space near our goal, and get between them and the goal."],
+         ["The ball is on the other side of the field. Where should you be?","Tucked in toward the middle so the team stays compact, not stuck out on the sideline."]],
+    watch:"How far does the wing-back run in a game? It is usually the most tiring job on the field.",
+    partners:[side==="left"?"LCB":"RCB",side==="left"?"LCM":"RCM","N9"]
+  };
+}
+function centralMid(side,other){
+  var s=side==="left"?"left":"right";
+  return {
+    one:"The worker in the middle: helps everywhere and connects the wide players to the 9 and 10.",
+    n352:"You are free to move between the "+s+" wing-back and the top two, and to run into the box for late shots.",
+    n532:"Now you tuck in beside the holding midfielder so the three of you close off the middle of the field.",
+    withBall:["Find pockets, the open spaces between the other team's lines, and show for the ball.","Receive on the half-turn: check your shoulder first so you know where to pass.","Make late runs into the box when the wing-back has the ball out wide."],
+    without:["Stay a good pass away from your teammates: not too far, not too close.","Pressure the player with the ball when it is on your side, and slide over when it switches.","Track runners coming from midfield. They are the players who score."],
+    cues:["Check your shoulder","Stay a pass apart","Win the second ball"],
+    ask:[["The wing-back has the ball out wide. Where do you go?","Somewhere they can pass to you, inside and at an angle, or a run into the box for the cross."],
+         ["The other team wins the ball in the middle. What do you do first?","Get between the ball and our goal and slow them down until the team gets set."]],
+    watch:"Do the three midfielders stay close enough to pass to each other, like a triangle?",
+    partners:["DM",other,side==="left"?"LWB":"RWB","N10"]
+  };
+}
+function numberNine(){
+  return {
+    one:"The target: the highest player, who holds the ball up, finishes the chances, and leads the press.",
+    n352:"You live near the last defender. Be the outlet for long passes, keep the ball so the team can move up, and be in the box when crosses come in.",
+    n532:"You are the first defender. Steer their center backs to one side so the team knows where to squeeze.",
+    withBall:["Stay on the last defender's shoulder so they can't relax. Time your runs with the pass so you stay onside.","Hold the ball up with your body between the defender and the ball, so the 10 and the midfielders can run past you.","Be in the box for every cross. Shoot early and low, first time when you can."],
+    without:["Press their center backs when the keeper passes to them, and steer them toward one side.","Stay close to the 10 so the two of you press together, not alone.","If they get past you, drop into shape. Don't chase."],
+    cues:["Body between the defender and the ball","Be in the box for every cross","Shoot early"],
+    ask:[["A long ball is coming to you with a defender on your back. What do you do?","Get your body between the defender and the ball, hold it, and lay it off to the 10 or a midfielder so the team can get up to you."],
+         ["We are crossing from the wing. Where do you go?","Into the box, toward goal. The 10 arrives at the edge of the box for the ball that drops out."]],
+    watch:"Does the 9 keep the ball long enough for teammates to join, and is he in the box for crosses?",
+    partners:["N10","LWB","RWB"]
+  };
+}
+function numberTen(){
+  return {
+    one:"The playmaker behind the 9: lives between their midfield and defense and turns half-chances into real chances.",
+    n352:"You have freedom. Drop into the gaps between their lines, receive, turn, then pass to the 9 or run at the defense. Swap places with a midfielder when they run past you.",
+    n532:"Stay a step behind the 9 and cut off the pass to their midfielders. When we win the ball, you are the first player we look for.",
+    withBall:["Find pockets between their midfield and defense, and show for the ball with your body open.","Receive on the half-turn: check your shoulder so you can turn and face goal in one touch.","Play the killer pass to the 9 or a wing-back, or run at the defense yourself. Shoot from the edge of the box."],
+    without:["Stay close to the 9 and press together, so their defenders can't play comfortably.","Cut off the passing lane to their holding midfielder, keeping the ball in front of you.","When we win it, get to a gap between their lines fast so we have somewhere to pass."],
+    cues:["Find the pocket","Turn on the half-turn","Pass to the 9, shoot from the edge"],
+    ask:[["Our holding mid has the ball. Where do you go?","Into the gap between their midfielders and defenders, body open to the ball and ready to turn."],
+         ["The 9 is holding the ball with his back to goal. What is your job?","Run past him for the layoff, or move to the side to give him a passing angle. Never stand right next to him."]],
+    watch:"Does the 10 keep finding pockets, and does he turn and face goal instead of always passing back?",
+    partners:["N9","LCM","RCM"]
+  };
+}
+
+var D={
+  GK:{
+    one:"Last line of defense, first line of attack, and the loudest voice on the field.",
+    n352:"When we have the ball, the keeper steps up a few strides so the back three always has a safe pass behind them.",
+    n532:"With five defenders in front, the keeper's biggest job is organizing: calling out who to mark and when to squeeze up.",
+    withBall:["Show for the ball when a defender is under pressure. The keeper is the extra passer.","Play short to a center back or out wide first. Save long kicks for when there is a clear target.","After a save or catch, look up fast. A quick throw can start a counter-attack."],
+    without:["Stay on your toes in the middle of the goal, hands ready, knees bent.","Shout “Keeper!” or “Away!” on every cross and loose ball so nobody hesitates.","Read balls over the top and come out to sweep them up before a striker gets there."],
+    cues:["Talk early, talk loud","Get set before the shot","Big save? Look for the counter"],
+    ask:[["What do you shout when you are going to grab a cross?","“Keeper!” Early and loud, so defenders can get out of the way."],
+         ["The ball is on the far sideline. Where do you stand?","Shifted a step or two toward the ball side and ready to move, still closer to the middle than to a post."]],
+    watch:"Not just the saves: how often does the keeper talk, and do they pass calmly under pressure?",
+    partners:["LCB","CB","RCB"]
+  },
+  CB:{
+    one:"The boss of the back line, the anchor everyone else lines up around.",
+    n352:"You are the middle of three. Sit a little deeper than the players next to you so you can cover if either of them steps out to challenge.",
+    n532:"You are the anchor of the five. Stay in the middle and the other four slide left and right based on where you are.",
+    withBall:["Take a calm first touch, then pass to the holding mid, a side center back, or a wing-back.","If nobody is pressing you, dribble forward a few steps to pull an opponent out of position, then pass.","Switch the field with a long pass to the far wing-back when the near side is crowded."],
+    without:["Stay between the striker and our goal.","Head or clear every cross, and clear it wide, never into the middle.","Keep the line straight and talk: “Step!” means step up together, “Drop!” means drop together."],
+    cues:["Clear it wide, not middle","Eyes on the ball and your player","No dribbling in front of our goal"],
+    ask:[["A cross is coming in. What are you looking for?","The striker running at goal. Get between them and the goal, then head it away."],
+         ["The side center back just stepped out to tackle. What do you do?","Slide over and cover the space they left. That is what “covering” means."]],
+    watch:"Do the defenders move up and back together, like one line?",
+    partners:["LCB","RCB","GK","DM"]
+  },
+  LCB:sideCB("left","RCB"),
+  RCB:sideCB("right","LCB"),
+  LWB:wingBack("left"),
+  RWB:wingBack("right"),
+  DM:{
+    one:"The shield: sits in front of the defenders and connects them to the midfield.",
+    n352:"With the ball, you are the safety valve: an easy pass for the defenders and a link to the midfielders in front of you.",
+    n532:"Without the ball, you plug the middle in front of the five defenders so nobody can pass through the gap.",
+    withBall:["Show for the ball between the defenders and midfielders, with your body open so you can see the field.","Keep it simple: one or two touches, pass, move. Your job is speed and safety.","Switch the play to the wide side when the middle is crowded."],
+    without:["Sit in front of the back line, in the middle. That is the danger zone in front of our box.","Stay between the ball and our goal and slow attackers down so teammates can get back.","If both central midfielders push up, stay home. The middle can never be empty."],
+    cues:["Simple pass, then move","Body open, see the whole field","Never leave the middle empty"],
+    ask:[["Both central midfielders are pushing forward. Who protects the middle?","The holding mid. Stay put. If you go too, the middle of our field is wide open."],
+         ["A defender passes you the ball with an opponent right behind you. What now?","Play it first time to a teammate, or use one touch to turn away. Don't hold it in the danger zone."]],
+    watch:"The holding mid rarely scores, but when the team stays connected they are usually the reason.",
+    partners:["CB","LCM","RCM"]
+  },
+  LCM:centralMid("left","RCM"),
+  RCM:centralMid("right","LCM"),
+  N9:numberNine(),
+  N10:numberTen()
+};
+
+var QUIZ=[
+  {q:"I run the whole sideline. I'm up high with the ball, and back in the line of five without it.",a:["LWB","RWB"],shape:"352",why:"Wing-backs stretch the field with the ball and drop back to defend without it."},
+  {q:"I sit in front of the defenders and protect the middle of the field.",a:["DM"],shape:"532",why:"The holding midfielder plugs the gap in front of the back line."},
+  {q:"I'm the only player who can use my hands (inside my box), and I'm the loudest voice.",a:["GK"],shape:"352",why:"The keeper sees the whole field and organizes everyone."},
+  {q:"I'm the middle of the back line and the anchor the others line up around.",a:["CB"],shape:"532",why:"The center back is the boss of the back line."},
+  {q:"The wing-back in front of me ran forward, so I cover the space behind them.",a:["LCB","RCB"],shape:"352",why:"The side center backs cover the wide channels when the wing-backs go up."},
+  {q:"We just lost the ball. I sprint back to be the outside defender of a line of five.",a:["LWB","RWB"],shape:"532",why:"Wing-backs recover fast so the team can reset as a 5-3-2."},
+  {q:"I'm the highest player. I press their center backs and steer them to one side.",a:["N9"],shape:"532",why:"The 9 is the first defender, and the target when we go forward."},
+  {q:"I live in the gap between their midfield and defense, and I turn to face goal.",a:["N10"],shape:"352",why:"The 10 finds pockets, turns, and creates chances for the 9."},
+  {q:"A long ball comes to me with a defender on my back. I hold it up so teammates can run past.",a:["N9"],shape:"352",why:"The 9 keeps the ball so the team can move up."},
+  {q:"I make late runs into the box and connect the wing-back to the 9 and 10.",a:["LCM","RCM"],shape:"352",why:"Central midfielders link the wide players to the attack and arrive late for shots."},
+  {q:"I'm the safety pass for defenders under pressure. One or two touches, then move.",a:["DM"],shape:"352",why:"The holding mid keeps things simple and safe."}
+];
+
+var state={mode:"learn",shape:"352",sel:"GK",qi:0,score:0,tries:0,done:false,finished:false,fb:null};
+
+var $=function(s){return document.querySelector(s)};
+var dotsEl=$("#dots"), cardEl=$("#card"), bannerEl=$("#banner");
+var dotEls={};
+
+/* build dots once */
+var html="";
+ORDER.forEach(function(id){
+  var p=COORD[id][0];
+  html+='<g class="dot '+LINE[id]+'" data-id="'+id+'" tabindex="0" role="button" aria-label="'+NAMES[id]+'" style="transform:translate('+p[0]+'px,'+p[1]+'px)">'+
+    '<g class="inner"><circle class="ring" r="25"/><circle class="body" r="18"/><text>'+(LABEL[id]||id)+'</text></g></g>';
+});
+dotsEl.innerHTML=html;
+ORDER.forEach(function(id){dotEls[id]=dotsEl.querySelector('[data-id="'+id+'"]')});
+
+function applyPitch(){
+  var idx=state.shape==="352"?0:1;
+  var partners=(state.mode==="learn")?D[state.sel].partners:[];
+  ORDER.forEach(function(id){
+    var el=dotEls[id], p=COORD[id][idx];
+    el.style.transform="translate("+p[0]+"px,"+p[1]+"px)";
+    el.classList.toggle("sel",state.mode==="learn"&&id===state.sel);
+    el.classList.toggle("partner",partners.indexOf(id)>-1);
+    if(state.mode==="learn"){el.classList.remove("right","wrong");}
+  });
+}
+function applyBanner(){
+  bannerEl.innerHTML=state.shape==="352"
+   ? "<b>3-5-2, we have the ball.</b> Three defenders, five across the middle with the wing-backs high and wide, and the 9 and 10 up top."
+   : "<b>5-3-2, they have the ball.</b> Same eleven players. The wing-backs drop back to make a line of five, the 9 and 10 step back, and three midfielders stay tight.";
+}
+function applyControls(){
+  document.querySelectorAll("#modes button").forEach(function(b){b.classList.toggle("on",b.dataset.mode===state.mode)});
+  document.querySelectorAll("#shapes button").forEach(function(b){b.classList.toggle("on",b.dataset.shape===state.shape)});
+}
+function li(a){return a.map(function(t){return "<li>"+t+"</li>"}).join("")}
+
+function learnCard(id){
+  var d=D[id], s=state.shape, i=ORDER.indexOf(id);
+  var shapeName=s==="352"?"In a 3-5-2":"In a 5-3-2";
+  var qa=d.ask.map(function(x){return '<details class="qa"><summary>'+x[0]+'</summary><p><b>Answer:</b> '+x[1]+'</p></details>'}).join("");
+  var chips=d.partners.map(function(p){return '<button class="chip" data-go="'+p+'">'+NAMES[p]+'</button>'}).join("");
+  var cues=d.cues.map(function(c){return '<span class="chip cue">'+c+'</span>'}).join("");
+  return '<h2>'+NAMES[id]+'</h2>'+
+   '<div class="tags"><span class="tag">'+LINELABEL[LINE[id]]+'</span><span class="tag shape">'+shapeName+'</span></div>'+
+   '<p class="one">'+d.one+'</p>'+
+   '<p class="shapebox"><b>'+shapeName+':</b> '+(s==="352"?d.n352:d.n532)+'</p>'+
+   '<details'+(s==="352"?" open":"")+'><summary>When we have the ball</summary><ul>'+li(d.withBall)+'</ul></details>'+
+   '<details'+(s==="532"?" open":"")+'><summary>When they have the ball</summary><ul>'+li(d.without)+'</ul></details>'+
+   '<p class="sect">Say it like this</p><div class="chips">'+cues+'</div>'+
+   '<p class="sect">Ask your player</p>'+qa+
+   '<p class="watch"><b>At the game:</b> '+d.watch+'</p>'+
+   '<p class="sect">Works closely with</p><div class="chips">'+chips+'</div>'+
+   '<div class="nav"><button data-nav="-1" aria-label="Previous position">Back</button>'+
+   '<span class="count">'+(i+1)+' of '+ORDER.length+'</span>'+
+   '<button class="btn primary" data-nav="1" aria-label="Next position">Next</button></div>';
+}
+
+function quizCard(){
+  if(state.finished){
+    var n=QUIZ.length, msg=state.score>=n-1?"Ready for game day.":state.score>=Math.ceil(n/2)?"Solid. One more pass through the cards will lock it in.":"Good start. Read the cards together and try again.";
+    return '<div class="final"><p class="qprog">Quiz finished</p><div class="big">'+state.score+' / '+n+'</div><p>'+msg+'</p>'+
+      '<p style="font-size:13px;color:var(--muted)">Points count only for correct answers on the first try.</p>'+
+      '<div class="nav"><button data-act="again">Play again</button><span class="count"></span><button class="btn primary" data-act="learn">Back to the cards</button></div></div>';
+  }
+  var q=QUIZ[state.qi];
+  var fb="";
+  if(state.fb){fb='<div class="fb '+state.fb.cls+'">'+state.fb.text+'</div>';}
+  var action=state.done
+    ? '<div class="nav"><span class="count">Score '+state.score+'</span><button class="btn primary" data-act="next">'+(state.qi===QUIZ.length-1?"See score":"Next question")+'</button></div>'
+    : '<div class="nav"><span class="count">Score '+state.score+'</span></div>';
+  return '<p class="qprog">Question '+(state.qi+1)+' of '+QUIZ.length+'</p>'+
+    '<p class="qtext">'+q.q+'</p>'+
+    '<p class="qhint">Tap the position on the field. The shape shown is '+(q.shape==="352"?"3-5-2":"5-3-2")+'.</p>'+fb+action;
+}
+
+function renderCard(){
+  cardEl.innerHTML=state.mode==="learn"?learnCard(state.sel):quizCard();
+}
+function render(){applyControls();applyBanner();applyPitch();renderCard();}
+
+function clearMarks(){ORDER.forEach(function(id){dotEls[id].classList.remove("right","wrong","sel","partner")});}
+
+function startQuiz(){
+  state.qi=0;state.score=0;state.tries=0;state.done=false;state.finished=false;state.fb=null;
+  loadQuestion();
+}
+function loadQuestion(){
+  var q=QUIZ[state.qi];
+  state.shape=q.shape;state.tries=0;state.done=false;state.fb=null;
+  clearMarks();render();
+}
+function answer(id){
+  if(state.done||state.finished)return;
+  var q=QUIZ[state.qi];
+  if(q.a.indexOf(id)>-1){
+    if(state.tries===0)state.score++;
+    state.done=true;
+    dotEls[id].classList.add("right");
+    state.fb={cls:"good",text:"<b>Yes, the "+NAMES[id].toLowerCase()+".</b> "+q.why+(state.tries===0?"":" (No point this time, but you got it.)")};
+  }else{
+    state.tries++;
+    var el=dotEls[id];el.classList.remove("wrong");void el.getBoundingClientRect();el.classList.add("wrong");
+    if(state.tries>=2){
+      state.done=true;
+      q.a.forEach(function(a){dotEls[a].classList.add("right")});
+      state.fb={cls:"info",text:"<b>It's the "+q.a.map(function(a){return NAMES[a].toLowerCase()}).join(" or the ")+".</b> "+q.why};
+    }else{
+      state.fb={cls:"bad",text:"Not quite. That's the "+NAMES[id].toLowerCase()+". Try another player."};
+    }
+  }
+  renderCard();
+}
+
+/* events */
+dotsEl.addEventListener("click",function(e){
+  var g=e.target.closest(".dot");if(!g)return;
+  var id=g.dataset.id;
+  if(state.mode==="learn"){state.sel=id;render();scrollCard();}
+  else answer(id);
+});
+dotsEl.addEventListener("keydown",function(e){
+  if(e.key!=="Enter"&&e.key!==" ")return;
+  var g=e.target.closest(".dot");if(!g)return;
+  e.preventDefault();g.dispatchEvent(new MouseEvent("click",{bubbles:true}));
+});
+function scrollCard(){
+  var r=cardEl.getBoundingClientRect();
+  if(r.top>window.innerHeight-120){
+    var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    cardEl.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+  }
+}
+cardEl.addEventListener("click",function(e){
+  var t=e.target.closest("[data-go],[data-nav],[data-act]");if(!t)return;
+  if(t.dataset.go){state.sel=t.dataset.go;render();window.scrollTo({top:0,behavior:"auto"});}
+  else if(t.dataset.nav){
+    var i=(ORDER.indexOf(state.sel)+parseInt(t.dataset.nav,10)+ORDER.length)%ORDER.length;
+    state.sel=ORDER[i];render();
+  }else if(t.dataset.act==="next"){
+    if(state.qi===QUIZ.length-1){state.finished=true;clearMarks();renderCard();}
+    else{state.qi++;loadQuestion();}
+  }else if(t.dataset.act==="again"){startQuiz();}
+  else if(t.dataset.act==="learn"){state.mode="learn";render();}
+});
+$("#modes").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.mode===state.mode)return;
+  state.mode=b.dataset.mode;
+  if(state.mode==="quiz"){startQuiz();}
+  else{clearMarks();render();}
+});
+$("#shapes").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  state.shape=b.dataset.shape;
+  if(state.mode==="learn")render();else{applyControls();applyBanner();applyPitch();}
+});
+
+render();
+})();
+</script>
+</body>
+</html>
